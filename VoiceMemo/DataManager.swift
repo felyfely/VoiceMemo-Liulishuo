@@ -11,26 +11,7 @@ import CoreData
 
 
 class DataManager : NSObject {
-//    let options = [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true]
-//
-//    lazy var psc : NSPersistentStoreCoordinator = {
-//        let modelURL = Bundle.main.url(forResource: "VoiceMemo", withExtension: "momd")
-//        let model = NSManagedObjectModel(contentsOf: modelURL!)!
-//        let psc = NSPersistentStoreCoordinator(managedObjectModel: model)
-//        return psc
-//    }()
-//    
-//    lazy var context:NSManagedObjectContext = {
-//        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-//        context.persistentStoreCoordinator = self.psc
-//        return context
-//    }()
-//    
-//    
-//
-//    
-//    lazy var recordings = [VoiceRecord]()
-//    lazy var storeUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+
     
     //https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
     
@@ -81,14 +62,16 @@ class DataManager : NSObject {
 
     }
     
-    func fetch() {
+    func fetch() -> [VoiceRecord]? {
         
         do {
             let fetchedRecords = try managedObjectContext.fetch(VoiceRecord.fetchRequest()) as! [VoiceRecord]
-            print(fetchedRecords[0].fileName)
+            //print(fetchedRecords[0].fileName)
+            return fetchedRecords
         } catch {
             fatalError("Failed to fetch employees: \(error)")
         }
+        return nil
     }
     
     
@@ -98,7 +81,7 @@ class DataManager : NSObject {
 
 
 extension DataManager {
-    class func documentDirectoryURL() -> URL? {
+    class func documentDirectoryURL() -> URL {
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = urls[0]

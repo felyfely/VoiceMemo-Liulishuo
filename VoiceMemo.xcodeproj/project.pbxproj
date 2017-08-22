@@ -17,6 +17,7 @@
 		5B8A2FFA1F4AF95F00355269 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8A2FF91F4AF95F00355269 /* DataManager.swift */; };
 		5B8A2FFC1F4B752400355269 /* VoiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8A2FFB1F4B752400355269 /* VoiceManager.swift */; };
 		5B8A2FFE1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B8A2FFD1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf */; };
+		5B8A30001F4BEBAD00355269 /* ExtensionToolBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8A2FFF1F4BEBAD00355269 /* ExtensionToolBox.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		5B8A2FF91F4AF95F00355269 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		5B8A2FFB1F4B752400355269 /* VoiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceManager.swift; sourceTree = "<group>"; };
 		5B8A2FFD1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Material-Design-Iconic-Font.ttf"; sourceTree = "<group>"; };
+		5B8A2FFF1F4BEBAD00355269 /* ExtensionToolBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionToolBox.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				5B8A2FF91F4AF95F00355269 /* DataManager.swift */,
 				5B8A2FF71F4AF8DC00355269 /* VoiceRecordingVC.swift */,
 				5B8A2FE41F4AF59B00355269 /* VoiceMemoTableVC.swift */,
+				5B8A2FFF1F4BEBAD00355269 /* ExtensionToolBox.swift */,
 				5B8A2FE61F4AF59B00355269 /* Main.storyboard */,
 				5B8A2FFD1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf */,
 				5B8A2FEC1F4AF59B00355269 /* Assets.xcassets */,
@@ -159,6 +162,7 @@
 				5B8A2FE51F4AF59B00355269 /* VoiceMemoTableVC.swift in Sources */,
 				5B8A2FF81F4AF8DC00355269 /* VoiceRecordingVC.swift in Sources */,
 				5B8A2FE31F4AF59B00355269 /* AppDelegate.swift in Sources */,
+				5B8A30001F4BEBAD00355269 /* ExtensionToolBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

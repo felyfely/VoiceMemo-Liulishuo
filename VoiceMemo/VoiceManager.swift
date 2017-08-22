@@ -17,12 +17,11 @@ class VoiceManager : NSObject {
     // voice recognition
     static let shared = VoiceManager()
     
-    
-    let audioEngine = AVAudioEngine()
-    /**default to American english regardless of the region*/
-    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))
-    
-    let request = SFSpeechAudioBufferRecognitionRequest()
+//    let audioEngine = AVAudioEngine()
+//    /**default to American english regardless of the region*/
+//    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))
+//    
+//    let request = SFSpeechAudioBufferRecognitionRequest()
     
     // voice recording
     lazy var recordingSession = AVAudioSession.sharedInstance()
@@ -30,8 +29,8 @@ class VoiceManager : NSObject {
     var settings : [String : Any] =
         [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 44100.0,
-            AVEncoderBitRateKey : 192000,
+            AVSampleRateKey: 12000,
+            //AVEncoderBitRateKey : 192000,
             AVNumberOfChannelsKey: 1,
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
     ]
@@ -76,7 +75,7 @@ class VoiceManager : NSObject {
     }
     
     func fileURL() -> URL? {
-        let soundURL = DataManager.documentDirectoryURL()?.appendingPathComponent("\(UUID().uuidString).m4a")
+        let soundURL = DataManager.documentDirectoryURL().appendingPathComponent("\(UUID().uuidString).m4a")
         return soundURL
     }
     
@@ -122,6 +121,33 @@ class VoiceManager : NSObject {
             self.audioPlayer.delegate = self
             self.audioPlayer.play()
         }
+
+    }
+    
+    func playFile(_ fileName : String) {
+        var dirPathURL = DataManager.documentDirectoryURL()
+        dirPathURL.appendPathComponent(fileName)
+//        guard let audioPlayer = audioPlayer ?? (try? AVAudioPlayer(contentsOf: dirPathURL)) else {
+//            print("failed to init audio player"); return
+//        }
+//        if audioPlayer.url == dirPathURL {
+//            if audioPlayer.isPlaying { audioPlayer.pause() }
+//            else { audioPlayer.play() }
+//        }
+//        else {
+            //audioPlayer!.stop()
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: dirPathURL)
+            audioPlayer!.prepareToPlay()
+            audioPlayer!.delegate = self
+            audioPlayer!.play()
+        }
+        
+        catch {
+            print("failed to init audio player \(error)")
+        }
+//        }
+        
     }
     
     
@@ -132,7 +158,7 @@ class VoiceManager : NSObject {
 
 extension VoiceManager : AVAudioRecorderDelegate {
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        
+        print("finished recording ? \(flag)")
     }
 }
 
