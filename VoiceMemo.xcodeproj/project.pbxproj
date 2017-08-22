@@ -19,6 +19,8 @@
 		5B8A2FFE1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B8A2FFD1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf */; };
 		5B8A30001F4BEBAD00355269 /* ExtensionToolBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8A2FFF1F4BEBAD00355269 /* ExtensionToolBox.swift */; };
 		5B8A30021F4C005000355269 /* CustomizedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8A30011F4C005000355269 /* CustomizedViews.swift */; };
+		5B8A30051F4C5BA500355269 /* recording.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 5B8A30041F4C5BA500355269 /* recording.PNG */; };
+		5B8A30071F4C5BAA00355269 /* history.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 5B8A30061F4C5BAA00355269 /* history.PNG */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		5B8A2FFD1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Material-Design-Iconic-Font.ttf"; sourceTree = "<group>"; };
 		5B8A2FFF1F4BEBAD00355269 /* ExtensionToolBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionToolBox.swift; sourceTree = "<group>"; };
 		5B8A30011F4C005000355269 /* CustomizedViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizedViews.swift; sourceTree = "<group>"; };
+		5B8A30041F4C5BA500355269 /* recording.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recording.PNG; sourceTree = "<group>"; };
+		5B8A30061F4C5BAA00355269 /* history.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = history.PNG; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,7 @@
 		5B8A2FE11F4AF59B00355269 /* VoiceMemo */ = {
 			isa = PBXGroup;
 			children = (
+				5B8A30031F4C5B4700355269 /* ScreenShots */,
 				5B8A2FE21F4AF59B00355269 /* AppDelegate.swift */,
 				5B8A2FFB1F4B752400355269 /* VoiceManager.swift */,
 				5B8A2FF91F4AF95F00355269 /* DataManager.swift */,
@@ -83,6 +88,15 @@
 				5B8A2FE91F4AF59B00355269 /* VoiceMemo.xcdatamodeld */,
 			);
 			path = VoiceMemo;
+			sourceTree = "<group>";
+		};
+		5B8A30031F4C5B4700355269 /* ScreenShots */ = {
+			isa = PBXGroup;
+			children = (
+				5B8A30041F4C5BA500355269 /* recording.PNG */,
+				5B8A30061F4C5BAA00355269 /* history.PNG */,
+			);
+			name = ScreenShots;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -145,8 +159,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B8A30071F4C5BAA00355269 /* history.PNG in Resources */,
 				5B8A2FF01F4AF59B00355269 /* LaunchScreen.storyboard in Resources */,
 				5B8A2FED1F4AF59B00355269 /* Assets.xcassets in Resources */,
+				5B8A30051F4C5BA500355269 /* recording.PNG in Resources */,
 				5B8A2FE81F4AF59B00355269 /* Main.storyboard in Resources */,
 				5B8A2FFE1F4B90AF00355269 /* Material-Design-Iconic-Font.ttf in Resources */,
 			);
