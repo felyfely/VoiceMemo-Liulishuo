@@ -20,7 +20,7 @@
 		5B8A30001F4BEBAD00355269 /* ExtensionToolBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8A2FFF1F4BEBAD00355269 /* ExtensionToolBox.swift */; };
 		5B8A30021F4C005000355269 /* CustomizedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8A30011F4C005000355269 /* CustomizedViews.swift */; };
 		5B8A30051F4C5BA500355269 /* recording.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 5B8A30041F4C5BA500355269 /* recording.PNG */; };
-		5B8A30071F4C5BAA00355269 /* history.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 5B8A30061F4C5BAA00355269 /* history.PNG */; };
+		5B8A30091F4C742100355269 /* history.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 5B8A30081F4C742100355269 /* history.PNG */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +39,7 @@
 		5B8A2FFF1F4BEBAD00355269 /* ExtensionToolBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionToolBox.swift; sourceTree = "<group>"; };
 		5B8A30011F4C005000355269 /* CustomizedViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizedViews.swift; sourceTree = "<group>"; };
 		5B8A30041F4C5BA500355269 /* recording.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recording.PNG; sourceTree = "<group>"; };
-		5B8A30061F4C5BAA00355269 /* history.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = history.PNG; sourceTree = "<group>"; };
+		5B8A30081F4C742100355269 /* history.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = history.PNG; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				5B8A30041F4C5BA500355269 /* recording.PNG */,
-				5B8A30061F4C5BAA00355269 /* history.PNG */,
+				5B8A30081F4C742100355269 /* history.PNG */,
 			);
 			name = ScreenShots;
 			sourceTree = "<group>";
@@ -159,7 +159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B8A30071F4C5BAA00355269 /* history.PNG in Resources */,
+				5B8A30091F4C742100355269 /* history.PNG in Resources */,
 				5B8A2FF01F4AF59B00355269 /* LaunchScreen.storyboard in Resources */,
 				5B8A2FED1F4AF59B00355269 /* Assets.xcassets in Resources */,
 				5B8A30051F4C5BA500355269 /* recording.PNG in Resources */,
@@ -348,6 +348,7 @@
 				5B8A2FF61F4AF59B00355269 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

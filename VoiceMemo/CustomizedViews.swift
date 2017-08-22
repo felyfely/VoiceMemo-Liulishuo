@@ -14,18 +14,13 @@ protocol RecordingStateDelegate : NSObjectProtocol {
     func didCancellRecording()
 }
 
-class RecordButton : UIButton {
-    @IBInspectable
-    var borderUIColor : UIColor = UIColor.blue
-    
-    
+class RecordButton : ButtonWithBorder {
+
     weak var delegate : RecordingStateDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.layer.borderWidth = 2
-        self.clipsToBounds = true
-        self.layer.borderColor = borderUIColor.cgColor
     }
     
     override func layoutSubviews() {
@@ -52,5 +47,19 @@ class RecordButton : UIButton {
         delegate?.didCancellRecording()
         super.touchesCancelled(touches, with: event)
     }
+    
+}
+
+class ButtonWithBorder : UIButton {
+    
+    @IBInspectable
+    var borderUIColor : UIColor = UIColor.blue
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.clipsToBounds = true
+        self.layer.borderColor = borderUIColor.cgColor
+    }
+    
+    
     
 }

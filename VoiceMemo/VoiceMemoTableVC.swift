@@ -39,10 +39,18 @@ class VoiceMemoTableVC: UITableViewController {
         
     }
     
+    func deselectRow(_ indexPath : IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if let cell = tableView.cellForRow(at: indexPath) as? VoiceMemoTableViewCell {
+            cell.playButtonState = false
+        }
+    }
+    
+    
     func finishPlayback(noti : Notification) {
         //let flag = noti.object as? Bool // not using right now
         if let indexPath = tableView.indexPathForSelectedRow{
-            tableView.deselectRow(at: indexPath, animated: true)
+            deselectRow(indexPath)
         }
         
     }
@@ -51,25 +59,31 @@ class VoiceMemoTableVC: UITableViewController {
         return voiceRecords.count
     }
     
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "voiceCell", for: indexPath) as! VoiceMemoTableViewCell
+        let record = voiceRecords[indexPath.row]
+        cell.nameLabel.text = record.fileDescription ?? record.fileName
+        cell.descriptionLabel.text = (record.creationDate as Date?)?.toTimeString()
+        cell.playButtonState =  indexPath == tableView.indexPathForSelectedRow
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? VoiceMemoTableViewCell {
+            cell.playButtonState = false
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath == tableView.indexPathForSelectedRow{
-            tableView.deselectRow(at: indexPath, animated: true)
+            deselectRow(indexPath)
             VM.shared.stopPlayback()
             return nil
         }
         return indexPath
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "voiceCell", for: indexPath) as! VoiceMemoTableViewCell
-        let record = voiceRecords[indexPath.row]
-        cell.nameLabel.text = record.fileDescription ?? record.fileName
-        cell.descriptionLabel.text = (record.creationDate as Date?)?.toTimeString()
-        
-        return cell
-    }
-    
-
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -81,6 +95,9 @@ class VoiceMemoTableVC: UITableViewController {
         }
         VM.shared.stopPlayback()
         VM.shared.playFile(fileName)
+        if let cell = tableView.cellForRow(at: indexPath) as? VoiceMemoTableViewCell {
+            cell.playButtonState = true
+        }
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -98,6 +115,16 @@ class VoiceMemoTableVC: UITableViewController {
 class VoiceMemoTableViewCell : UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var playStopButton: UIButton!
+    var playButtonState : Bool {
+        set{
+            if newValue {playStopButton.setTitle("", for: .normal)}
+            else {playStopButton.setTitle("", for: .normal)}
+        }
+        get{
+            return self.playButtonState
+        }
+    }
     
 }
 

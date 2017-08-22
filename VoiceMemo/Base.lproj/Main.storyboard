@@ -108,14 +108,43 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8mY-RL-Brn" customClass="ButtonWithBorder" customModule="VoiceMemo" customModuleProvider="target">
+                                            <rect key="frame" x="8" y="9" width="44" height="44"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="44" id="12c-kh-XnV"/>
+                                                <constraint firstAttribute="height" constant="44" id="cD8-qD-3iN"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Material-Design-Iconic-Font" family="Material-Design-Iconic-Font" pointSize="24"/>
+                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <state key="normal" title="">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="selected" title="">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" title="">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                    <integer key="value" value="1"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="borderUIColor">
+                                                    <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="22"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3D-OI-kMh">
-                                            <rect key="frame" x="8" y="8" width="359" height="15.5"/>
+                                            <rect key="frame" x="60" y="8" width="307" height="15.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xf6-yc-6Hf">
-                                            <rect key="frame" x="8" y="31.5" width="42" height="24"/>
+                                            <rect key="frame" x="60" y="31.5" width="307" height="24"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="24" id="Pon-6D-wSl"/>
                                             </constraints>
@@ -125,17 +154,21 @@
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="8mY-RL-Brn" firstAttribute="centerY" secondItem="7bA-CR-13A" secondAttribute="centerY" id="38D-XP-ko6"/>
                                         <constraint firstItem="v3D-OI-kMh" firstAttribute="top" secondItem="7bA-CR-13A" secondAttribute="topMargin" id="9ZR-io-FIi"/>
-                                        <constraint firstAttribute="leadingMargin" secondItem="Xf6-yc-6Hf" secondAttribute="leading" id="CEN-dx-gWX"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="Xf6-yc-6Hf" secondAttribute="bottom" id="IeA-Zo-cEN"/>
-                                        <constraint firstAttribute="leadingMargin" secondItem="v3D-OI-kMh" secondAttribute="leading" id="Xyd-ss-gqo"/>
+                                        <constraint firstItem="Xf6-yc-6Hf" firstAttribute="leading" secondItem="8mY-RL-Brn" secondAttribute="trailing" constant="8" symbolic="YES" id="LlY-0O-ZEG"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Xf6-yc-6Hf" secondAttribute="trailing" id="T0A-rc-0hT"/>
+                                        <constraint firstItem="8mY-RL-Brn" firstAttribute="leading" secondItem="7bA-CR-13A" secondAttribute="leadingMargin" id="Ykj-QQ-JP4"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="v3D-OI-kMh" secondAttribute="trailing" id="p9J-9U-Ogw"/>
+                                        <constraint firstItem="v3D-OI-kMh" firstAttribute="leading" secondItem="8mY-RL-Brn" secondAttribute="trailing" constant="8" symbolic="YES" id="rB1-5r-SfH"/>
                                         <constraint firstItem="Xf6-yc-6Hf" firstAttribute="top" secondItem="v3D-OI-kMh" secondAttribute="bottom" constant="8" symbolic="YES" id="thY-1g-mQf"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="Xf6-yc-6Hf" id="Phj-5y-qcx"/>
                                     <outlet property="nameLabel" destination="v3D-OI-kMh" id="HxO-8S-7LX"/>
+                                    <outlet property="playStopButton" destination="8mY-RL-Brn" id="cpX-2W-qWW"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -154,7 +187,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2wa-F5-cBg" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="bMX-yr-HzF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="bMX-yr-HzF">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.41490536929999999" green="0.91235727069999994" blue="0.97175627949999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
