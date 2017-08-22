@@ -16,27 +16,71 @@ class VoiceRecordingVC : UIViewController {
     @IBOutlet weak var recordButton: RecordButton!
     
     @IBOutlet weak var playButton: UIButton!
-
+    
+    @IBOutlet var permissionButton: UIButton!
+    
     @IBOutlet weak var speechContentLabel: UILabel!
     
     
     @IBAction func play(_ sender: Any) {
-        VM.shared.doPlay()
+        if VM.shared.audioPlayer?.isPlaying ?? false {
+            VM.shared.stopPlayback()
+            playButton.setTitle("", for: .normal)
+        }
+        else {
+            VM.shared.doPlay()
+            playButton.setTitle("", for: .normal)
+        }
+    }
+    
+    @IBAction func getPermission(_ sender: Any) {
+        
+        VM.shared.requestPermissionAction {
+            UIApplication.shared.open(URL(string:UIApplicationOpenSettingsURLString)!)
+        }
+        
+    }
+    
+    override func viewDidLoad() {
+        
+        recordButton.delegate = self
+        VM.shared.delegate  = self
+        
+        playButton.isEnabled = !(VM.shared.audioRecorder == nil)
+        
+        view.addSubview(permissionButton)
+        permissionButton.frame = view.frame
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshPermissionButtonStates), name: voiceManagerDidChangePermissionStateNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(finishPlayback(noti:)), name: voiceManagerDidFinishPlaybackNotification, object: nil)
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        refreshPermissionButtonStates()
     }
     
     
-    override func viewDidLoad() {
-        recordButton.delegate = self
-        VM.shared.delegate  = self
-        VM.shared.initAudioSessionIfNeeded()
-        playButton.isEnabled = !(VM.shared.audioRecorder == nil)
+    
+    func finishPlayback(noti : Notification) {
+        //let flag = noti.object as? Bool // not using right now
+        playButton.setTitle("", for: .normal)
+        
+    }
+    
+    func refreshPermissionButtonStates() {
+        permissionButton.isHidden = VM.shared.getPermissionStateString() == nil
+        permissionButton.setTitle(VM.shared.getPermissionStateString(), for: .normal)
     }
     
 }
 
 extension VoiceRecordingVC : RecordingStateDelegate {
     func didStartRecording() {
-        speechContentLabel.text = "Listening"
+        speechContentLabel.text = "Listening ..."
         VM.shared.startRecording()
         playButton.isEnabled = false
         UIView.animate(withDuration: 0.25) { self.view.backgroundColor = UIColor.darkGray }

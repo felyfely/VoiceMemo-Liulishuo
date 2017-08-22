@@ -5,12 +5,12 @@
 //  Created by 付 旦 on 8/22/17.
 //  Copyright © 2017 付 旦. All rights reserved.
 //
-import UIKit
 import Foundation
 import AVFoundation
 import Speech
 
 let voiceManagerDidFinishPlaybackNotification =  NSNotification.Name(rawValue: "vioceManagerDidFinishPlayback")
+let voiceManagerDidChangePermissionStateNotification =  NSNotification.Name(rawValue: "vioceManagerDidChangePermission")
 
 
 protocol VoiceManagerDelegate : NSObjectProtocol {
@@ -56,19 +56,72 @@ class VoiceManager : NSObject {
     // audio play back
     var audioPlayer : AVAudioPlayer?
     
+    func getPermissionStateString() -> String? {
+        
+        switch audioSession.recordPermission() {
+            
+        case AVAudioSessionRecordPermission.undetermined: return "Enable Mic Permission"
+            
+        case AVAudioSessionRecordPermission.denied: return "Enable Mic Permission in settings"
+            
+        case AVAudioSessionRecordPermission.granted: print("speech dictation granted")
+            
+        default: print("unexpected states")
+            
+        }
+        
+        switch SFSpeechRecognizer.authorizationStatus() {
+            
+        case .notDetermined: return "Enable Speech Dictation Permission"
+            
+        case .denied: return "Enable Speech Dictation Permission in Settings"
+            
+        case .restricted: print("device is too old for speech dictation") // old device
+            
+        case .authorized: print("speech dictation granted") // do nothing
+            
+        }
+        
+        return nil
+    }
+    
+    func requestPermissionAction(_ jumpToSettingsBlock : ()-> Void) {
+        
+        if audioSession.recordPermission() == .undetermined {
+            audioSession.requestRecordPermission({ (success) in
+                OperationQueue.main.addOperation {
+                    NotificationCenter.default.post(name: voiceManagerDidChangePermissionStateNotification, object: nil)
+                }
+            })
+            return
+        }
+        
+        if SFSpeechRecognizer.authorizationStatus() == .notDetermined {
+            requestSpeechRecoginzerPermission()
+            return
+        }
+        
+        if audioSession.recordPermission() == .denied
+            || SFSpeechRecognizer.authorizationStatus() == .denied {
+            jumpToSettingsBlock()
+            return
+        }
+        
+        initAudioSessionIfNeeded()
+    }
+    
     func initAudioSessionIfNeeded() {
         
         switch audioSession.recordPermission() {
             
-        case AVAudioSessionRecordPermission.undetermined:                 audioSession.requestRecordPermission() { allowed in
-            print("Allow Recording ? \(allowed)")
-            }
+        case AVAudioSessionRecordPermission.undetermined:
+            audioSession.requestRecordPermission() { allowed in }
             
         case AVAudioSessionRecordPermission.denied: print("prompt user to go to settings");
             
         case AVAudioSessionRecordPermission.granted: initAudioRecordingSession()
             
-        default: break
+        default: print("unexpected states")
             
         }
         
@@ -76,11 +129,11 @@ class VoiceManager : NSObject {
             
         case .notDetermined: requestSpeechRecoginzerPermission()
             
-        case .denied: print("prompt user to authorize"); break
+        case .denied: print("prompt user to authorize");
             
-        case .restricted: break // old device
+        case .restricted: initSpeechDictationSession() // old device
             
-        case .authorized: break // do nothing
+        case .authorized: initSpeechDictationSession() // do nothing
             
         }
         
@@ -99,6 +152,16 @@ class VoiceManager : NSObject {
         }
     }
     
+    func initSpeechDictationSession() {
+        if let recognitionTask = recognitionTask {
+            recognitionTask.cancel()
+            self.recognitionTask = nil
+        }
+        
+        speechRecognizer.delegate = self
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+    }
+    
     func requestSpeechRecoginzerPermission() {
         SFSpeechRecognizer.requestAuthorization { authStatus in
             /*
@@ -106,19 +169,8 @@ class VoiceManager : NSObject {
              operation to the main queue to update the record button's state.
              */
             OperationQueue.main.addOperation {
-                switch authStatus {
-                case .authorized:
-                    break
-                    
-                case .denied:
-                    break
-                    
-                case .restricted:
-                    break
-                    
-                case .notDetermined:
-                    break
-                }
+                NotificationCenter.default.post(name: voiceManagerDidChangePermissionStateNotification, object: nil)
+                
             }
         }
     }
@@ -160,14 +212,7 @@ class VoiceManager : NSObject {
         
         do {
             
-            if let recognitionTask = recognitionTask {
-                recognitionTask.cancel()
-                self.recognitionTask = nil
-            }
-            speechRecognizer.delegate = self
             
-            
-            recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
             
             guard let inputNode = audioEngine.inputNode else {
                 print("Audio engine has no input node"); return }
@@ -210,7 +255,9 @@ class VoiceManager : NSObject {
             try audioEngine.start()
         }
             
-        catch{}
+        catch{
+            print(error)
+        }
         
         
     }
@@ -251,20 +298,12 @@ class VoiceManager : NSObject {
     func playFile(_ fileName : String) {
         var dirPathURL = DataManager.documentDirectoryURL()
         dirPathURL.appendPathComponent(fileName)
-        //        guard let audioPlayer = audioPlayer ?? (try? AVAudioPlayer(contentsOf: dirPathURL)) else {
-        //            print("failed to init audio player"); return
-        //        }
-        //        if audioPlayer.url == dirPathURL {
-        //            if audioPlayer.isPlaying { audioPlayer.pause() }
-        //            else { audioPlayer.play() }
-        //        }
-        //        else {
-        //audioPlayer!.stop()
         do {
+            audioPlayer?.stop()
             audioPlayer = try AVAudioPlayer(contentsOf: dirPathURL)
-            audioPlayer!.prepareToPlay()
-            audioPlayer!.delegate = self
-            audioPlayer!.play()
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.delegate = self
+            audioPlayer?.play()
         }
             
         catch {

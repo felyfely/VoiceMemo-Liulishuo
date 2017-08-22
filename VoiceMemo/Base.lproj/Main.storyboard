@@ -53,18 +53,26 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Listening" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ASP-Ps-anX">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Listening ..." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ASP-Ps-anX">
                                 <rect key="frame" x="16" y="88" width="343" height="29"/>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="24"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HOLD TO RECORD" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ah3-IL-G3z">
+                                <rect key="frame" x="243" y="606.5" width="73.5" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="ah3-IL-G3z" firstAttribute="centerY" secondItem="umf-vw-KjA" secondAttribute="centerY" id="0ib-oJ-8JM"/>
                             <constraint firstItem="ASP-Ps-anX" firstAttribute="leading" secondItem="Pp0-4D-HKy" secondAttribute="leadingMargin" id="ESC-6b-LRx"/>
                             <constraint firstItem="ASP-Ps-anX" firstAttribute="centerX" secondItem="Pp0-4D-HKy" secondAttribute="centerX" id="EaA-zZ-Qn4"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ASP-Ps-anX" secondAttribute="trailing" id="FYb-Ou-Trv"/>
+                            <constraint firstItem="ah3-IL-G3z" firstAttribute="leading" secondItem="umf-vw-KjA" secondAttribute="trailing" constant="24" id="Vhu-2z-VTf"/>
                             <constraint firstItem="umf-vw-KjA" firstAttribute="leading" secondItem="JEk-5b-xeb" secondAttribute="trailing" constant="36" id="Xjc-1l-KRm"/>
                             <constraint firstItem="umf-vw-KjA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="ASP-Ps-anX" secondAttribute="bottom" constant="8" symbolic="YES" id="bsK-c8-r5d"/>
                             <constraint firstItem="PEj-g0-sUk" firstAttribute="top" secondItem="umf-vw-KjA" secondAttribute="bottom" constant="8" symbolic="YES" id="hRF-1F-XSi"/>
@@ -83,12 +91,23 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="permissionButton" destination="x8I-qq-WvP" id="F5l-p6-0w7"/>
                         <outlet property="playButton" destination="JEk-5b-xeb" id="wkQ-nQ-F4q"/>
                         <outlet property="recordButton" destination="umf-vw-KjA" id="adw-hA-CDV"/>
                         <outlet property="speechContentLabel" destination="ASP-Ps-anX" id="42s-hc-eeT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gfc-sO-O5w" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="x8I-qq-WvP">
+                    <rect key="frame" x="0.0" y="0.0" width="380" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <state key="normal" title="Get Permission"/>
+                    <connections>
+                        <action selector="getPermission:" destination="5Wy-qn-EQl" eventType="touchUpInside" id="khR-3H-TAd"/>
+                    </connections>
+                </button>
             </objects>
             <point key="canvasLocation" x="489" y="125"/>
         </scene>
@@ -105,7 +124,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="64"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OuC-Sb-Bm0" id="7bA-CR-13A">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="63.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8mY-RL-Brn" customClass="ButtonWithBorder" customModule="VoiceMemo" customModuleProvider="target">
@@ -187,7 +206,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2wa-F5-cBg" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="bMX-yr-HzF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="bMX-yr-HzF">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.41490536929999999" green="0.91235727069999994" blue="0.97175627949999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
