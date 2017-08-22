@@ -13,10 +13,15 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var dataManager : DataManager!
+    var dataReady = false
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        dataManager = DataManager(completionClosure: {
+            self.dataReady = true
+        })
         return true
     }
 

@@ -41,5 +41,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Visualize your speech with speech recognition</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Use microphone to record your voice and for speech recognition</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Material-Design-Iconic-Font.ttf</string>
+	</array>
 </dict>
 </plist>
