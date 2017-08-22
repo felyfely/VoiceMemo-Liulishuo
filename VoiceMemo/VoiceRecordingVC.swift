@@ -19,13 +19,10 @@ extension UIViewController {
 }
 class VoiceRecordingVC : UIViewController {
     
-    @IBAction func record(_ sender: Any) {
-        VM.shared.startRecording()
-    }
+    @IBOutlet weak var recordButton: RecordButton!
     
-    @IBAction func stopRecording(_ sender: Any) {
-        VM.shared.finishRecording()
-    }
+
+    
     
     @IBAction func play(_ sender: Any) {
         VM.shared.doPlay()
@@ -35,12 +32,21 @@ class VoiceRecordingVC : UIViewController {
         
     }
     
-    @IBAction func fetch(_ sender: Any) {
-        appD.dataManager.fetch()
+    override func viewDidLoad() {
+        recordButton.delegate = self
     }
     
-    
-    override func viewDidLoad() {
+}
+
+extension VoiceRecordingVC : RecordingStateDelegate {
+    func didStartRecording() {
+        VM.shared.startRecording()
+    }
+    func didCancellRecording() {
+        // delete recording here
+    }
+    func didEndRecording() {
+        VM.shared.finishRecording()
         
     }
     

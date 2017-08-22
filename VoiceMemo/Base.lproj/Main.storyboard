@@ -23,38 +23,32 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="37" translatesAutoresizingMaskIntoConstraints="NO" id="JX8-VR-lml">
-                                <rect key="frame" x="144.5" y="184.5" width="85" height="298"/>
+                                <rect key="frame" x="155" y="201" width="64" height="265"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="umf-vw-KjA">
-                                        <rect key="frame" x="0.0" y="0.0" width="85" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="umf-vw-KjA" customClass="RecordButton" customModule="VoiceMemo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="64" id="6lQ-tS-PFh"/>
+                                            <constraint firstAttribute="width" constant="64" id="FQX-fW-jqn"/>
+                                        </constraints>
                                         <state key="normal" title="Record"/>
-                                        <connections>
-                                            <action selector="record:" destination="5Wy-qn-EQl" eventType="touchUpInside" id="4sp-fY-Nhm"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AGI-IM-XF5">
-                                        <rect key="frame" x="0.0" y="67" width="85" height="30"/>
-                                        <state key="normal" title="Stop Record"/>
-                                        <connections>
-                                            <action selector="stopRecording:" destination="5Wy-qn-EQl" eventType="touchUpInside" id="eGi-Lb-t4f"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEk-5b-xeb">
-                                        <rect key="frame" x="0.0" y="134" width="85" height="30"/>
+                                        <rect key="frame" x="0.0" y="101" width="64" height="30"/>
                                         <state key="normal" title="Play"/>
                                         <connections>
                                             <action selector="play:" destination="5Wy-qn-EQl" eventType="touchUpInside" id="CHJ-Nt-nDe"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GHY-wU-64f">
-                                        <rect key="frame" x="0.0" y="201" width="85" height="30"/>
+                                        <rect key="frame" x="0.0" y="168" width="64" height="30"/>
                                         <state key="normal" title="Stop Play"/>
                                         <connections>
                                             <action selector="stopPlaying:" destination="5Wy-qn-EQl" eventType="touchUpInside" id="MKR-Tb-HBn"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KGY-8a-ZXl">
-                                        <rect key="frame" x="0.0" y="268" width="85" height="30"/>
+                                        <rect key="frame" x="0.0" y="235" width="64" height="30"/>
                                         <state key="normal" title="fetch"/>
                                         <connections>
                                             <action selector="fetch:" destination="5Wy-qn-EQl" eventType="touchUpInside" id="hNp-sj-OZy"/>
@@ -76,6 +70,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="recordButton" destination="umf-vw-KjA" id="adw-hA-CDV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gfc-sO-O5w" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -94,7 +91,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="64"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OuC-Sb-Bm0" id="7bA-CR-13A">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="63.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="0lA-Fm-C9a">

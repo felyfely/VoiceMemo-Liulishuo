@@ -14,19 +14,21 @@ class VoiceMemoTableVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // query database here
-        refreshData(true)
-        tableView.addRefresh(with: #selector(refreshData))
-        
+        refreshData()
+        tableView.addRefresh(self, with: #selector(refreshData))
         
     }
     
-    func refreshData(_ animated : Bool = false) {
-        guard let voiceRecords = appD.dataManager.fetch()   else {
+    func refreshData() {
+        guard let voiceRecords = appD.dataManager.fetch() else {
             print("error querying database"); return
         }
         
-        self.voiceRecords = voiceRecords
-        animated ? tableView.reloadAnimated() : tableView.reloadData()
+        self.voiceRecords = voiceRecords.sorted(by: { (one, two) -> Bool in
+            return one.creationDate as Date? ?? Date() > two.creationDate as Date? ?? Date()
+        })
+        tableView.reloadData()
+        tableView.endRefresh()
         
     }
     
@@ -40,7 +42,6 @@ class VoiceMemoTableVC: UITableViewController {
         cell.nameLabel.text = record.fileName
         cell.descriptionLabel.text = (record.creationDate as Date?)?.toTimeString()
         
-        
         return cell
     }
     
@@ -50,9 +51,17 @@ class VoiceMemoTableVC: UITableViewController {
         guard let fileName = record.fileName else {
             print("invalid file name at index \(indexPath.row)"); return
         }
-        
         VM.shared.playFile(fileName)
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+                self.appD.dataManager.delete(self.voiceRecords.remove(at: indexPath.row))
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        
+        return [delete]
     }
     
 }

@@ -62,6 +62,21 @@ class DataManager : NSObject {
 
     }
     
+    func delete(_ obj : NSManagedObject) {
+        if let record = obj as? VoiceRecord, let fileName = record.fileName {
+            var dirUrl = DataManager.documentDirectoryURL()
+            dirUrl.appendPathComponent(fileName)
+            do {
+                try FileManager.default.removeItem(at: dirUrl)
+            }
+            catch {
+                print("failed to delete file at \(dirUrl.absoluteString), due to \(error)")
+            }
+        }
+        
+        managedObjectContext.delete(obj)
+    }
+    
     func fetch() -> [VoiceRecord]? {
         
         do {

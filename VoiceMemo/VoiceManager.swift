@@ -17,11 +17,11 @@ class VoiceManager : NSObject {
     // voice recognition
     static let shared = VoiceManager()
     
-//    let audioEngine = AVAudioEngine()
-//    /**default to American english regardless of the region*/
-//    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))
-//    
-//    let request = SFSpeechAudioBufferRecognitionRequest()
+    //    let audioEngine = AVAudioEngine()
+    //    /**default to American english regardless of the region*/
+    //    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))
+    //
+    //    let request = SFSpeechAudioBufferRecognitionRequest()
     
     // voice recording
     lazy var recordingSession = AVAudioSession.sharedInstance()
@@ -45,9 +45,9 @@ class VoiceManager : NSObject {
             
         case AVAudioSessionRecordPermission.undetermined: initAudioRecordingSession()
             
-        case AVAudioSessionRecordPermission.denied: print("prompt user to go to settings")
+        case AVAudioSessionRecordPermission.denied: print("prompt user to go to settings");
             
-        case AVAudioSessionRecordPermission.granted: break
+        case AVAudioSessionRecordPermission.granted: initAudioRecordingSession()
             
         default: break
             
@@ -56,17 +56,14 @@ class VoiceManager : NSObject {
     }
     
     
-    func initAudioRecordingSession() {
+    func initAudioRecordingSession(_ hasPermission : Bool = false) {
         do {
-            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord, with : [.defaultToSpeaker])
+            try recordingSession.overrideOutputAudioPort(.speaker)
             try recordingSession.setActive(true)
-            recordingSession.requestRecordPermission() { allowed in
-                DispatchQueue.main.async {
-                    if allowed {
-                        print("Allow")
-                    } else {
-                        print("Dont Allow")
-                    }
+            if !hasPermission {
+                recordingSession.requestRecordPermission() { allowed in
+                    print("Allow Recording ? \(allowed)")
                 }
             }
         } catch {
@@ -90,6 +87,7 @@ class VoiceManager : NSObject {
                                                 settings: settings)
             audioRecorder.delegate = self
             audioRecorder.prepareToRecord()
+            
         } catch {
             finishRecording(success: false)
         }
@@ -104,6 +102,7 @@ class VoiceManager : NSObject {
     func finishRecording(success: Bool = true) {
         audioRecorder.stop()
         if success {
+            
             print("success")
             // only for testing
             (UIApplication.shared.delegate as! AppDelegate).dataManager.save(audioRecorder.url.lastPathComponent, creationDate: Date())
@@ -121,32 +120,32 @@ class VoiceManager : NSObject {
             self.audioPlayer.delegate = self
             self.audioPlayer.play()
         }
-
+        
     }
     
     func playFile(_ fileName : String) {
         var dirPathURL = DataManager.documentDirectoryURL()
         dirPathURL.appendPathComponent(fileName)
-//        guard let audioPlayer = audioPlayer ?? (try? AVAudioPlayer(contentsOf: dirPathURL)) else {
-//            print("failed to init audio player"); return
-//        }
-//        if audioPlayer.url == dirPathURL {
-//            if audioPlayer.isPlaying { audioPlayer.pause() }
-//            else { audioPlayer.play() }
-//        }
-//        else {
-            //audioPlayer!.stop()
+        //        guard let audioPlayer = audioPlayer ?? (try? AVAudioPlayer(contentsOf: dirPathURL)) else {
+        //            print("failed to init audio player"); return
+        //        }
+        //        if audioPlayer.url == dirPathURL {
+        //            if audioPlayer.isPlaying { audioPlayer.pause() }
+        //            else { audioPlayer.play() }
+        //        }
+        //        else {
+        //audioPlayer!.stop()
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: dirPathURL)
             audioPlayer!.prepareToPlay()
             audioPlayer!.delegate = self
             audioPlayer!.play()
         }
-        
+            
         catch {
             print("failed to init audio player \(error)")
         }
-//        }
+        //        }
         
     }
     
