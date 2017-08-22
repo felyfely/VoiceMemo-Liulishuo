@@ -18,6 +18,7 @@ class RecordButton : UIButton {
     @IBInspectable
     var borderUIColor : UIColor = UIColor.blue
     
+    
     weak var delegate : RecordingStateDelegate?
     
     override func awakeFromNib() {

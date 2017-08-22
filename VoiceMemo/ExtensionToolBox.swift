@@ -38,6 +38,13 @@ extension UITableView {
 
 
 extension UIViewController {
+    
+    var appD : AppDelegate  {
+        get {
+            return UIApplication.shared.delegate as! AppDelegate
+        }
+    }
+    
     func promptStandardAlert(_ title : String? = nil, message : String? = nil, buttonText : String = "OK",cancel : Bool = false, confirmCallback : (()->Void)? = nil ) {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -49,3 +56,5 @@ extension UIViewController {
         }
     }
 }
+
+

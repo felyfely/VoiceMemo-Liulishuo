@@ -17,6 +17,13 @@ class VoiceMemoTableVC: UITableViewController {
         refreshData()
         tableView.addRefresh(self, with: #selector(refreshData))
         
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 64
+        
+        // remove observer in deinit is not required after ios9
+        NotificationCenter.default.addObserver(self, selector: #selector(finishPlayback(noti:)), name: voiceManagerDidFinishPlaybackNotification, object: nil)
+        
+        
     }
     
     func refreshData() {
@@ -32,25 +39,47 @@ class VoiceMemoTableVC: UITableViewController {
         
     }
     
+    func finishPlayback(noti : Notification) {
+        //let flag = noti.object as? Bool // not using right now
+        if let indexPath = tableView.indexPathForSelectedRow{
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+        
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return voiceRecords.count
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath == tableView.indexPathForSelectedRow{
+            tableView.deselectRow(at: indexPath, animated: true)
+            VM.shared.stopPlayback()
+            return nil
+        }
+        return indexPath
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "voiceCell", for: indexPath) as! VoiceMemoTableViewCell
         let record = voiceRecords[indexPath.row]
-        cell.nameLabel.text = record.fileName
+        cell.nameLabel.text = record.fileDescription ?? record.fileName
         cell.descriptionLabel.text = (record.creationDate as Date?)?.toTimeString()
         
         return cell
     }
     
+
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+
         
         let record = voiceRecords[indexPath.row]
         guard let fileName = record.fileName else {
             print("invalid file name at index \(indexPath.row)"); return
         }
+        VM.shared.stopPlayback()
         VM.shared.playFile(fileName)
     }
     

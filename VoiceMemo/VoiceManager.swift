@@ -10,22 +10,39 @@ import Foundation
 import AVFoundation
 import Speech
 
+let voiceManagerDidFinishPlaybackNotification =  NSNotification.Name(rawValue: "vioceManagerDidFinishPlayback")
 
+
+protocol VoiceManagerDelegate : NSObjectProtocol {
+    func didRecognizeSpeech(_ text : String)
+    func didFinishRecording(_ fileName : String, creationDate : Date, fileDescription : String?)
+}
 
 
 class VoiceManager : NSObject {
-    // voice recognition
+    
+    // voice recognition, https://developer.apple.com/library/content/samplecode/SpeakToMe/Introduction/Intro.html#//apple_ref/doc/uid/TP40017110-Intro-DontLinkElementID_2
+    
     static let shared = VoiceManager()
     
-    //    let audioEngine = AVAudioEngine()
-    //    /**default to American english regardless of the region*/
-    //    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))
-    //
-    //    let request = SFSpeechAudioBufferRecognitionRequest()
+    weak var delegate : VoiceManagerDelegate?
+    
+    /**default to American english regardless of the region*/
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
+    
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    
+    private var recognitionTask: SFSpeechRecognitionTask?
+    
+    private let audioEngine = AVAudioEngine()
+    
+    var currentContent : String?
+    
+    var isSpeechRecognizerAvailable = false
     
     // voice recording
-    lazy var recordingSession = AVAudioSession.sharedInstance()
-    var audioRecorder   : AVAudioRecorder!
+    lazy var audioSession = AVAudioSession.sharedInstance()
+    var audioRecorder   : AVAudioRecorder?
     var settings : [String : Any] =
         [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
@@ -37,13 +54,15 @@ class VoiceManager : NSObject {
     
     
     // audio play back
-    var audioPlayer : AVAudioPlayer!
+    var audioPlayer : AVAudioPlayer?
     
-    func initAudioRecordingSessionIfNeeded() {
+    func initAudioSessionIfNeeded() {
         
-        switch recordingSession.recordPermission() {
+        switch audioSession.recordPermission() {
             
-        case AVAudioSessionRecordPermission.undetermined: initAudioRecordingSession()
+        case AVAudioSessionRecordPermission.undetermined:                 audioSession.requestRecordPermission() { allowed in
+            print("Allow Recording ? \(allowed)")
+            }
             
         case AVAudioSessionRecordPermission.denied: print("prompt user to go to settings");
             
@@ -53,25 +72,58 @@ class VoiceManager : NSObject {
             
         }
         
+        switch SFSpeechRecognizer.authorizationStatus() {
+            
+        case .notDetermined: requestSpeechRecoginzerPermission()
+            
+        case .denied: print("prompt user to authorize"); break
+            
+        case .restricted: break // old device
+            
+        case .authorized: break // do nothing
+            
+        }
+        
+        
     }
     
     
-    func initAudioRecordingSession(_ hasPermission : Bool = false) {
+    func initAudioRecordingSession() {
         do {
-            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord, with : [.defaultToSpeaker])
-            try recordingSession.overrideOutputAudioPort(.speaker)
-            try recordingSession.setActive(true)
-            if !hasPermission {
-                recordingSession.requestRecordPermission() { allowed in
-                    print("Allow Recording ? \(allowed)")
-                }
-            }
+            try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, with : [.defaultToSpeaker])
+            try audioSession.overrideOutputAudioPort(.speaker)
+            //try audioSession.setMode(AVAudioSessionModeMeasurement)
+            try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
         } catch {
             print("failed to record!")
         }
     }
     
-    func fileURL() -> URL? {
+    func requestSpeechRecoginzerPermission() {
+        SFSpeechRecognizer.requestAuthorization { authStatus in
+            /*
+             The callback may not be called on the main thread. Add an
+             operation to the main queue to update the record button's state.
+             */
+            OperationQueue.main.addOperation {
+                switch authStatus {
+                case .authorized:
+                    break
+                    
+                case .denied:
+                    break
+                    
+                case .restricted:
+                    break
+                    
+                case .notDetermined:
+                    break
+                }
+            }
+        }
+    }
+    
+    func fileURL() -> URL {
         let soundURL = DataManager.documentDirectoryURL().appendingPathComponent("\(UUID().uuidString).m4a")
         return soundURL
     }
@@ -79,33 +131,104 @@ class VoiceManager : NSObject {
     
     func startRecording() {
         
-        initAudioRecordingSessionIfNeeded()
+        initAudioSessionIfNeeded()
         
-        let audioSession = AVAudioSession.sharedInstance()
+        currentContent = nil
+        
+        
         do {
-            audioRecorder = try AVAudioRecorder(url: self.fileURL()!,
+            audioRecorder = try AVAudioRecorder(url: self.fileURL(),
                                                 settings: settings)
-            audioRecorder.delegate = self
-            audioRecorder.prepareToRecord()
+            audioRecorder?.delegate = self
+            
+            audioRecorder?.prepareToRecord()
             
         } catch {
             finishRecording(success: false)
         }
+        
         do {
             try audioSession.setActive(true)
-            audioRecorder.record()
-        } catch {
+            
+            audioRecorder?.record()
+        }   catch {
+            
         }
+        
+        
+        // speech dictation here
+        
+        do {
+            
+            if let recognitionTask = recognitionTask {
+                recognitionTask.cancel()
+                self.recognitionTask = nil
+            }
+            speechRecognizer.delegate = self
+            
+            
+            recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+            
+            guard let inputNode = audioEngine.inputNode else {
+                print("Audio engine has no input node"); return }
+            
+            guard let recognitionRequest = recognitionRequest else {
+                print("Unable to created a SFSpeechAudioBufferRecognitionRequest object"); return }
+            
+            // Configure request so that results are returned before audio recording is finished
+            recognitionRequest.shouldReportPartialResults = true
+            
+            // A recognition task represents a speech recognition session.
+            // We keep a reference to the task so that it can be cancelled.
+            recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
+                var isFinal = false
+                
+                if let result = result {
+                    let content = result.bestTranscription.formattedString
+                    self.currentContent = content
+                    self.delegate?.didRecognizeSpeech(content)
+                    isFinal = result.isFinal
+                }
+                
+                if error != nil || isFinal {
+                    self.audioEngine.stop()
+                    inputNode.removeTap(onBus: 0)
+                    
+                    self.recognitionRequest = nil
+                    self.recognitionTask = nil
+                    
+                }
+            }
+            
+            let recordingFormat = inputNode.outputFormat(forBus: 0)
+            inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+                self.recognitionRequest?.append(buffer)
+            }
+            
+            audioEngine.prepare()
+            
+            try audioEngine.start()
+        }
+            
+        catch{}
+        
+        
     }
     
     
     func finishRecording(success: Bool = true) {
-        audioRecorder.stop()
+        audioRecorder?.stop()
         if success {
             
             print("success")
+            
+            recognitionRequest?.endAudio()
+            
             // only for testing
-            (UIApplication.shared.delegate as! AppDelegate).dataManager.save(audioRecorder.url.lastPathComponent, creationDate: Date())
+            if let fileName = audioRecorder?.url.lastPathComponent {
+                delegate?.didFinishRecording(fileName, creationDate: Date(), fileDescription: currentContent)
+            }
+            currentContent = nil
             
         } else {
             audioRecorder = nil
@@ -114,11 +237,13 @@ class VoiceManager : NSObject {
     }
     
     func doPlay() {
-        if !audioRecorder.isRecording {
-            self.audioPlayer = try! AVAudioPlayer(contentsOf: audioRecorder.url)
-            self.audioPlayer.prepareToPlay()
-            self.audioPlayer.delegate = self
-            self.audioPlayer.play()
+        if !(audioRecorder?.isRecording ?? true){
+            if let audioPlayer = try? AVAudioPlayer(contentsOf: audioRecorder!.url) {
+                audioPlayer.prepareToPlay()
+                audioPlayer.delegate = self
+                audioPlayer.play()
+                self.audioPlayer = audioPlayer
+            }
         }
         
     }
@@ -149,6 +274,11 @@ class VoiceManager : NSObject {
         
     }
     
+    func stopPlayback() {
+        self.audioPlayer?.stop()
+        self.audioPlayer = nil
+    }
+    
     
     
     
@@ -163,7 +293,9 @@ extension VoiceManager : AVAudioRecorderDelegate {
 
 extension VoiceManager : AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        print("finished playing \(flag)")
+        print("finished playing ? \(flag)")
+        NotificationCenter.default.post(name: voiceManagerDidFinishPlaybackNotification, object: flag)
+        
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
@@ -175,3 +307,9 @@ extension VoiceManager : AVAudioPlayerDelegate {
     }
 }
 
+extension VoiceManager : SFSpeechRecognizerDelegate {
+    
+    public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
+        isSpeechRecognizerAvailable = available
+    }
+}

@@ -14,14 +14,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var dataManager : DataManager!
-    var dataReady = false
+    var isDataReady = false
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         dataManager = DataManager(completionClosure: {
-            self.dataReady = true
+            self.isDataReady = true
         })
+        
+        let colorView = UIView()
+        colorView.backgroundColor = UIColor(red: 106/255, green: 233/255, blue: 248/255, alpha: 1)
+        
+        // use UITableViewCell.appearance() to configure
+        // the default appearance of all UITableViewCells in your app
+        UITableViewCell.appearance().selectedBackgroundView = colorView
+        
+        
         return true
     }
 
